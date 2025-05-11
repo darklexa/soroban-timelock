@@ -47,3 +47,16 @@ This contract allows users to deposit a specified amount of tokens and enables o
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+
+
+---
+
+##  Fork Modifications
+
+This fork introduces an enhancement to the original contract:
+
+- Added an optional `until` field to the `TimeBound` struct.
+- This allows claimable balances to have both a **start** and **end** time window.
+- If `until` is set, balances must be claimed before that time. Otherwise, the claim fails.
+- This adds more flexibility and control over token lock behavior.
