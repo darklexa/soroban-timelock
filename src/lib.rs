@@ -21,7 +21,9 @@ pub enum TimeBoundKind {
 pub struct TimeBound {
     pub kind: TimeBoundKind,
     pub timestamp: u64,
+    pub until: Option<u64>, // optional end of the claim time
 }
+
 
 #[derive(Clone)]
 #[contracttype]
@@ -40,10 +42,19 @@ pub struct ClaimableBalanceContract;
 fn check_time_bound(env: &Env, time_bound: &TimeBound) -> bool {
     let ledger_timestamp = env.ledger().timestamp();
 
-    match time_bound.kind {
+    
+    let base_check = match time_bound.kind {
         TimeBoundKind::Before => ledger_timestamp <= time_bound.timestamp,
         TimeBoundKind::After => ledger_timestamp >= time_bound.timestamp,
-    }
+    };
+    
+    let within_limit = match time_bound.until {
+        Some(until) => ledger_timestamp <= until,
+        None => true,
+    };
+    
+    base_check && within_limit
+    
 }
 
 #[contractimpl]
